@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ND 2023/2024 Graduate Student Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+  /* Reset and base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* Hide non-active sections */
+  .home, .view, .form, .team {
+    display: none;
+  }
+  .active {
+    display: block;
+    animation: fadeInUp 0.6s ease forwards;
+  }
+  @keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Home Section */
+  .home {
+    max-width: 400px;
+    text-align: center;
+    background: rgba(255 255 255 / 0.15);
+    padding: 40px 30px;
+    border-radius: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    color: #fff;
+  }
+  .home h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+
+  /* Button Group */
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .button-group button {
+    padding: 18px 0;
+    font-size: 1.1rem;
+    background: #0077cc;
+    border: none;
+    border-radius: 18px;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0, 119, 204, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .button-group button:hover {
+    background: #005fa3;
+    box-shadow: 0 8px 20px rgba(0, 95, 163, 0.7);
+  }
+  .button-group button:focus-visible {
+    outline: 3px solid #00f2fe;
+    outline-offset: 2px;
+  }
+
+  /* Container for views */
+  .container {
+    max-width: 720px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 35px 40px;
+    border-radius: 28px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  }
+  h2 {
+    text-align: center;
+    color: #0077cc;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  /* Student Card */
+  .student-card {
+    display: flex;
+    align-items: center;
+    background: #f9faff;
+    padding: 18px 22px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    margin-bottom: 22px;
+    transition: box-shadow 0.3s ease;
+  }
+  .student-card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  }
+  .student-card img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 25px;
+    border: 3.5px solid #0077cc;
+    box-shadow: 0 3px 10px rgba(0,119,204,0.3);
+    flex-shrink: 0;
+    padding: 2px;
+  }
+  .details p {
+    margin: 6px 0;
+    color: #444;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  /* Form styling */
+  form label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+  }
+  form input, form select {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid #ccc;
+    border-radius: 15px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  form input:focus, form select:focus {
+    border-color: #0077cc;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0,119,204,0.3);
+  }
+  form button {
+    margin-top: 30px;
+    width: 100%;
+    padding: 16px 0;
+    background: #0077cc;
+    color: #fff;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,119,204,0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  form button:hover {
+    background: #005fa3;
+    box-shadow: 0 8px 24px rgba(0,95,163,0.7);
+  }
+
+  /* Back button */
+  .back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    background: #ddd;
+    color: #555;
+    padding: 12px 26px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .back-btn:hover {
+    background: #bbb;
+  }
+
+  /* Loading Indicator */
+  #loadingIndicator p {
+    font-style: italic;
+    font-size: 1rem;
+    color: #555;
+  }
+
+
+
+  /* ✅ Mobile Responsive Adjustments */
+@media screen and (max-width: 600px) {
+  body {
+    padding: 20px 10px;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav h1 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  nav ul li {
+    width: 100%;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+
+  .container,
+  section {
+    padding: 20px 15px;
+    margin: 10px auto;
+    width: 100%;
+  }
+
+  .student-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 18px 15px;
+  }
+
+  .student-card img {
+    margin-bottom: 15px;
+    margin-right: 0;
+    
+  }
+
+  .student-card .details p {
+    font-size: 0.95rem;
+  }
+
+  form {
+    padding: 15px;
+  }
+
+  form input,
+  form select,
+  form button {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}
+
+
+</style>
+</head>
+
+<body>
+  <div class="home active" id="home">
+    <h1>🎓 Kaduna Polytechnic ND Graduate Portal 2022/2023</h1>
+    <div class="button-group">
+      <button class="showPage" data-id="classmates">📋 View CourseMate List</button>
+      <button class="showPage" data-id="form">📝 Register Yourself</button>
+      <button class="showPage" data-id="team">👨‍💻 View Project Team</button>
+    </div>
+  </div>
+
+  <div class="view container" id="classmates">
+    <h2>📋 CourseMate List</h2>
+    <div id="loadingIndicator" style="text-align:center; margin-bottom: 20px; display:none;">
+      <p>please wait a moment.</p>
+    </div>
+    <div id="classmateContainer"></div>
+    <a class="back-btn" onclick="goHome()">← Back</a>
+  </div>
+
+  <div class="form container" id="form">
+    <h2>📝 Student Registration</h2>
+    <form id="studentForm">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required>
+
+      <label for="reg">Registration Number</label>
+      <input type="text" id="reg" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" required>
+
+      <label for="gender">Gender</label>
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+
+<label for="state">State</label>
+<input type="text" id="state" required>
+
+<label for="lga">Local Government Area</label>
+<input type="text" id="lga" required>
+
+<label for="town">Town</label>
+<input type="text" id="town" required>
+
+<label for="address">Residential Address</label>
+<input type="text" id="address" required>
+
+      <label for="photo">Passport Photograph</label>
+      <input type="file" id="photo" accept="image/*" required>
+
+      <button type="submit">Register</button>
+      
+      <button type="button" onclick="updateStudent()">🔁 Update</button>
+    </form>
+    <a class="back-btn" onclick="goHome()">← Back</a>
+  </div>
+
+  <div class="team container" id="team">
+    <h2>👨‍💻 Project Team Members</h2>
+    <div id="teamContainer"></div>
+    <a class="back-btn" onclick="goHome()">← Back</a>
+  </div>
+</body>
+<script type="module" src="js/javascript.js"></script>
+</html>
