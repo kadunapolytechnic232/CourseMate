@@ -49,7 +49,7 @@ body {
   text-align: center;
   background: rgba(255, 255, 255, 0.15);
   padding: 50px 35px;
-  margin-top: 30px;
+  margin-top: 20px;
   border-radius: 28px;
   backdrop-filter: blur(14px) saturate(180%);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
@@ -324,4 +324,5 @@ form button:hover {
 .call-btn { background: #2563eb; color: #fff; }
 .map-btn { background: #e2e8f0; color: #111; }
 .dir-btn { background: #0ea5e9; color: #fff; }
+
 
