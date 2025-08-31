@@ -259,38 +259,107 @@ window.updateStudent = function () {
 
 
 // ==============================
-// Map helpers
+// Map helpers with offline detection
 // ==============================
 const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
 const mapsBase = isIOS ? "http://maps.apple.com/" : "https://www.google.com/maps/";
 
+// Helper to check internet connectivity
+function isOnline() {
+  return navigator.onLine;
+}
+
+// Optional: show a subtle message
+function showOfflineMessage() {
+  if (!document.getElementById("offline-message")) {
+    const msg = document.createElement("div");
+    msg.id = "offline-message";
+    msg.textContent = "You are currently offline. Map features may not work.";
+    msg.style.position = "fixed";
+    msg.style.bottom = "10px";
+    msg.style.left = "50%";
+    msg.style.transform = "translateX(-50%)";
+    msg.style.backgroundColor = "#f44336";
+    msg.style.color = "#fff";
+    msg.style.padding = "8px 16px";
+    msg.style.borderRadius = "5px";
+    msg.style.zIndex = "1000";
+    document.body.appendChild(msg);
+
+    setTimeout(() => {
+      msg.remove();
+    }, 5000); // hide after 5 seconds
+  }
+}
+
 window.openPlace = function (address) {
-  const q = encodeURIComponent(address);
-  const url = isIOS ? `${mapsBase}?q=${q}` : `${mapsBase}search/?api=1&query=${q}`;
-  window.open(url, "_blank");
+  try {
+    if (!isOnline()) {
+      showOfflineMessage();
+      return;
+    }
+
+    const q = encodeURIComponent(address);
+    const url = isIOS ? `${mapsBase}?q=${q}` : `${mapsBase}search/?api=1&query=${q}`;
+    window.open(url, "_blank");
+  } catch (error) {
+    console.warn("Unable to open place:", error);
+  }
 };
 
 window.openDirections = function (address) {
-  const destination = encodeURIComponent(address);
-  if (!navigator.geolocation) {
-    return openDirectionsNoOrigin(destination);
+  try {
+    if (!isOnline()) {
+      showOfflineMessage();
+      return;
+    }
+
+    const destination = encodeURIComponent(address);
+
+    if (!navigator.geolocation) {
+      openDirectionsNoOrigin(destination);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const url = isIOS
+            ? `${mapsBase}?saddr=${latitude},${longitude}&daddr=${destination}`
+            : `${mapsBase}dir/?api=1&origin=${latitude},${longitude}&destination=${destination}`;
+          window.open(url, "_blank");
+        } catch (innerError) {
+          console.warn("Error opening directions with geolocation:", innerError);
+          openDirectionsNoOrigin(destination);
+        }
+      },
+      (err) => {
+        console.warn("Geolocation failed or denied:", err);
+        openDirectionsNoOrigin(destination);
+      },
+      { timeout: 5000 }
+    );
+  } catch (error) {
+    console.warn("Unable to get directions:", error);
   }
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const { latitude, longitude } = pos.coords;
-      const url = isIOS
-        ? `${mapsBase}?saddr=${latitude},${longitude}&daddr=${destination}`
-        : `${mapsBase}dir/?api=1&origin=${latitude},${longitude}&destination=${destination}`;
-      window.open(url, "_blank");
-    },
-    () => openDirectionsNoOrigin(destination)
-  );
 };
 
 function openDirectionsNoOrigin(destination) {
-  const url = isIOS
-    ? `${mapsBase}?daddr=${destination}`
-    : `${mapsBase}dir/?api=1&destination=${destination}`;
-  window.open(url, "_blank");
+  try {
+    if (!isOnline()) {
+      showOfflineMessage();
+      return;
+    }
+
+    const url = isIOS
+      ? `${mapsBase}?daddr=${destination}`
+      : `${mapsBase}dir/?api=1&destination=${destination}`;
+    window.open(url, "_blank");
+  } catch (error) {
+    console.warn("Unable to open directions:", error);
+  }
 }
 
+// Optional: Listen for connection changes
+window.addEventListener("offline", showOfflineMessage);
