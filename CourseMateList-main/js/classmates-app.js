@@ -99,48 +99,42 @@ window.renderTeam = function () {
   const container = document.getElementById("teamContainer");
   container.innerHTML = "";
   const team = shuffle([
-    {
-      fullName: "Yahya Abdullahi",
-      regNo: "CST22NDEV2550",
-      phone: "09162820838",
-      gender: "Male",
-      photo:
-        "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    },
-    {
-      fullName: "Bala Abdulsalam",
-      regNo: "CST22NDEV2546",
-      phone: "09131100280",
-      gender: "Male",
-      photo:
-        "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    },
-    {
-      fullName: "Aliyu Muhammad Lawal",
-      regNo: "CST22NDEV2618",
-      phone: "08065691994",
-      gender: "Male",
-      photo:
-        "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    },
-    {
-      fullName: "Faiza Adam",
-      regNo: "CST22NDEV2675",
-      phone: "08160306356",
-      gender: "Female",
-      photo:
-        "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    },
-    {
-      fullName: "Hauwa`U Ashir",
-      regNo: "CST22NDEV2488",
-      phone: "07069141658",
-      gender: "Female",
-      photo:
-        "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
-    },
-  ]);
-
+  {
+    fullName: "Abdullahi Yahaya",
+    regNo: "CST22NDEV2550",
+    phone: "09162820838",
+    gender: "Male",
+    photo: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+  },
+  {
+    fullName: "Umar Abdulrahman Mustapha",
+    regNo: "CST22NDEV2554",
+    phone: "09161177782",
+    gender: "Male",
+    photo: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+  },
+  {
+    fullName: "Aminu Mubarak",
+    regNo: "CST22NDEV2558",
+    phone: "08169550626",
+    gender: "Male",
+    photo: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+  },
+  {
+    fullName: "Bashir Fatima Adam",
+    regNo: "CST22NDEV2565",
+    phone: "08116500931",
+    gender: "Female",
+    photo: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+  },
+  {
+    fullName: "Peter Favour Love",
+    regNo: "CST22NDEV2557",
+    phone: "08116500931",
+    gender: "Female",
+    photo: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
+  },
+]);
   console.log(team)
 
   team.forEach((st) => {
@@ -363,3 +357,4 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
