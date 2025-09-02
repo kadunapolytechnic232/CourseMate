@@ -1,3 +1,4 @@
+/*
 // ==============================
 // Firebase setup
 // ==============================
@@ -192,6 +193,7 @@ function openDirectionsNoOrigin(destination) {
 // Optional: Listen to offline events
 window.addEventListener("offline", showOfflineMessage);
 
+*/
 
 
 
