@@ -1,5 +1,5 @@
 import { data } from "./classmates-data.js";
-let classmates = JSON.parse(localStorage.getItem("classmates")) || data;
+let classmates = data;
 
 // ==============================
 // Helpers
@@ -35,10 +35,9 @@ function saveClassmates() {
   localStorage.setItem("classmates", JSON.stringify(classmates));
 }
 
-document.querySelectorAll(".showPage").forEach((e) => {
-  e.addEventListener("click", () => {
-    let id = e.dataset.id;
-    showPage(`${id}`);
+document.querySelectorAll(".showPage").forEach((button) => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.id);
   });
 });
 
@@ -446,6 +445,7 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
 
 
