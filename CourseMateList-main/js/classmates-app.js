@@ -4,6 +4,7 @@ let classmates = JSON.parse(localStorage.getItem("classmates")) || data;
 // ==============================
 // Helpers
 // ==============================
+/*
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -11,6 +12,24 @@ function shuffle(array) {
   }
   return array;
 }
+*/
+function shuffleAsync(array, callback) {
+  let i = array.length - 1;
+
+  const interval = setInterval(() => {
+    if (i <= 0) {
+      clearInterval(interval);
+      if (callback) callback(array); // return result when done
+      return;
+    }
+
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+
+    i--;
+  }, 0); // 0 means "as fast as possible without blocking"
+}
+
 
 function saveClassmates() {
   localStorage.setItem("classmates", JSON.stringify(classmates));
@@ -60,6 +79,7 @@ window.renderClassmates = function () {
   loader.style.display = "block";
 
   loader.style.display = "none";
+  /*
   if (classmates.length > 0) {
     shuffle(classmates).forEach((st) => {
       const card = document.createElement("div");
@@ -88,6 +108,49 @@ window.renderClassmates = function () {
   } else {
     container.innerHTML = `<p>No classmates found.</p>`;
   }
+  */
+  if (classmates.length > 0) {
+  shuffle(classmates);
+
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= classmates.length) {
+      clearInterval(interval);
+      return;
+    }
+
+    const st = classmates[i];
+    const card = document.createElement("div");
+    card.className = "student-card";
+    card.innerHTML = `
+      <img src="${st.photo}" alt="${st.fullName}">
+      <div class="details">
+        <p><strong>Name:</strong> ${st.fullName}</p>
+        <p><strong>Reg No:</strong> ${st.regNo}</p>
+        <p><strong>Phone:</strong> ${st.phone}</p>
+        <p><strong>Gender:</strong> ${st.gender}</p>
+        ${st.state ? `<p><strong>State:</strong> ${st.state}</p>` : ""}
+        ${st.lga ? `<p><strong>LGA:</strong> ${st.lga}</p>` : ""}
+        ${st.town ? `<p><strong>Town:</strong> ${st.town}</p>` : ""}
+        ${st.address ? `<p><strong>Address:</strong> ${st.address}</p>` : ""}
+
+        <div class="actions">
+          <a href="tel:${st.phone}" class="call-btn">📞 Call</a>
+          ${st.address ? `<button onclick="openPlace('${st.address}')" class="map-btn">📍 Find</button>` : ""}
+          ${st.address ? `<button onclick="openDirections('${st.address}')" class="dir-btn">🗺️ Directions</button>` : ""}
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+
+    i++;
+  }, 0); // 0ms = run as fast as possible without freezing UI
+} else {
+  container.innerHTML = `<p>No classmates found.</p>`;
+  }
+
+
+  
 };
 
 renderClassmates();
@@ -136,7 +199,7 @@ window.renderTeam = function () {
   },
 ]);
   console.log(team)
-
+/*
   team.forEach((st) => {
     const card = document.createElement("div");
     card.className = "student-card";
@@ -151,6 +214,32 @@ window.renderTeam = function () {
     `;
     container.appendChild(card);
   });
+  */
+
+  let i = 0;
+function renderCard() {
+  if (i >= team.length) return;
+
+  const st = team[i];
+  const card = document.createElement("div");
+  card.className = "student-card";
+  card.innerHTML = `
+    <img src="${st.photo}" alt="${st.fullName}">
+    <div class="details">
+      <p><strong>Name:</strong> ${st.fullName}</p>
+      <p><strong>Reg No:</strong> ${st.regNo}</p>
+      <p><strong>Phone:</strong> ${st.phone}</p>
+      <p><strong>Gender:</strong> ${st.gender}</p>
+    </div>
+  `;
+  container.appendChild(card);
+
+  i++;
+  requestAnimationFrame(renderCard);
+}
+requestAnimationFrame(renderCard);
+
+  
 };
 
 // ==============================
@@ -357,4 +446,5 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
