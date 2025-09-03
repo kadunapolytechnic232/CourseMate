@@ -13,7 +13,7 @@ function shuffle(array) {
   return array;
 }
 */
-function shuffleAsync(array, callback) {
+function shuffle(array, callback) {
   let i = array.length - 1;
 
   const interval = setInterval(() => {
@@ -446,5 +446,6 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
 
