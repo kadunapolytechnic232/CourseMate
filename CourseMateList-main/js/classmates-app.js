@@ -4,125 +4,66 @@ let classmates = data;
 // ==============================
 // Helpers
 // ==============================
-/*
 function shuffle(array) {
+  // Fisher-Yates shuffle (fast, synchronous)
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
-*/
-function shuffle(array, callback) {
-  let i = array.length - 1;
-
-  const interval = setInterval(() => {
-    if (i <= 0) {
-      clearInterval(interval);
-      if (callback) callback(array); // return result when done
-      return;
-    }
-
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-
-    i--;
-  }, 0); // 0 means "as fast as possible without blocking"
-}
-
 
 function saveClassmates() {
   localStorage.setItem("classmates", JSON.stringify(classmates));
 }
 
 document.querySelectorAll(".showPage").forEach((button) => {
-  button.addEventListener("click", () => {
-    showPage(button.dataset.id);
-  });
+  button.addEventListener("click", () => showPage(button.dataset.id));
 });
 
+// ==============================
+// Page navigation
+// ==============================
 window.showPage = function (id) {
-  document
-    .querySelectorAll(".home, .view, .form, .team")
-    .forEach((el) => el.classList.remove("active"));
+  document.querySelectorAll(".home, .view, .form, .team").forEach((el) =>
+    el.classList.remove("active")
+  );
 
   const page = document.getElementById(id);
-  if (page) {
-    page.classList.add("active");
+  if (!page) return;
+  page.classList.add("active");
 
-    // render content when switching pages
-    if (id === "team") {
-      renderTeam();
-    } else if (id === "classmates") {
-      renderClassmates();
-    }
-  }
+  if (id === "team") renderTeam();
+  else if (id === "classmates") renderClassmates();
 };
-
 
 window.goHome = function () {
-  document
-    .querySelectorAll(".view, .form, .team")
-    .forEach((el) => el.classList.remove("active"));
+  document.querySelectorAll(".view, .form, .team").forEach((el) =>
+    el.classList.remove("active")
+  );
   document.getElementById("home").classList.add("active");
 };
-
 
 // ==============================
 // Render classmates
 // ==============================
 window.renderClassmates = function () {
   const container = document.getElementById("classmateContainer");
-  const loader = document.getElementById("loadingIndicator");
   container.innerHTML = "";
-  loader.style.display = "block";
 
-  loader.style.display = "none";
-  /*
-  if (classmates.length > 0) {
-    shuffle(classmates).forEach((st) => {
-      const card = document.createElement("div");
-      card.className = "student-card";
-      card.innerHTML = `
-        <img src="${st.photo}" alt="${st.fullName}">
-        <div class="details">
-          <p><strong>Name:</strong> ${st.fullName}</p>
-          <p><strong>Reg No:</strong> ${st.regNo}</p>
-          <p><strong>Phone:</strong> ${st.phone}</p>
-          <p><strong>Gender:</strong> ${st.gender}</p>
-          ${st.state ? `<p><strong>State:</strong> ${st.state}</p>` : ""}
-          ${st.lga ? `<p><strong>LGA:</strong> ${st.lga}</p>` : ""}
-          ${st.town ? `<p><strong>Town:</strong> ${st.town}</p>` : ""}
-          ${st.address ? `<p><strong>Address:</strong> ${st.address}</p>` : ""}
-
-          <div class="actions">
-            <a href="tel:${st.phone}" class="call-btn">📞 Call</a>
-            ${st.address ? `<button onclick="openPlace('${st.address}')" class="map-btn">📍 Find</button>` : ""}
-            ${st.address ? `<button onclick="openDirections('${st.address}')" class="dir-btn">🗺️ Directions</button>` : ""}
-          </div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  } else {
+  if (!classmates.length) {
     container.innerHTML = `<p>No classmates found.</p>`;
+    return;
   }
-  */
-  if (classmates.length > 0) {
+
   shuffle(classmates);
+  const fragment = document.createDocumentFragment();
 
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i >= classmates.length) {
-      clearInterval(interval);
-      return;
-    }
-
-    const st = classmates[i];
+  classmates.forEach((st) => {
     const card = document.createElement("div");
     card.className = "student-card";
     card.innerHTML = `
-      <img src="${st.photo}" alt="${st.fullName}">
+      <img loading="lazy" src="${st.photo}" alt="${st.fullName}">
       <div class="details">
         <p><strong>Name:</strong> ${st.fullName}</p>
         <p><strong>Reg No:</strong> ${st.regNo}</p>
@@ -132,35 +73,32 @@ window.renderClassmates = function () {
         ${st.lga ? `<p><strong>LGA:</strong> ${st.lga}</p>` : ""}
         ${st.town ? `<p><strong>Town:</strong> ${st.town}</p>` : ""}
         ${st.address ? `<p><strong>Address:</strong> ${st.address}</p>` : ""}
-
         <div class="actions">
           <a href="tel:${st.phone}" class="call-btn">📞 Call</a>
-          ${st.address ? `<button onclick="openPlace('${st.address}')" class="map-btn">📍 Find</button>` : ""}
-          ${st.address ? `<button onclick="openDirections('${st.address}')" class="dir-btn">🗺️ Directions</button>` : ""}
+          ${
+            st.address
+              ? `<button onclick="openPlace('${st.address}')" class="map-btn">📍 Find</button>`
+              : ""
+          }
+          ${
+            st.address
+              ? `<button onclick="openDirections('${st.address}')" class="dir-btn">🗺️ Directions</button>`
+              : ""
+          }
         </div>
       </div>
     `;
-    container.appendChild(card);
+    fragment.appendChild(card);
+  });
 
-    i++;
-  }, 0); // 0ms = run as fast as possible without freezing UI
-} else {
-  container.innerHTML = `<p>No classmates found.</p>`;
-  }
-
-
-  
+  container.appendChild(fragment);
 };
-
 renderClassmates();
 
 // ==============================
-// Render team (static)
+// Render team
 // ==============================
-window.renderTeam = function () {
-  const container = document.getElementById("teamContainer");
-  container.innerHTML = "";
-  const team = shuffle([
+const teamData = [
   {
     fullName: "Abdullahi Yahaya",
     regNo: "CST22NDEV2550",
@@ -196,14 +134,19 @@ window.renderTeam = function () {
     gender: "Female",
     photo: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png",
   },
-]);
-  console.log(team)
-/*
-  team.forEach((st) => {
+];
+
+window.renderTeam = function () {
+  const container = document.getElementById("teamContainer");
+  container.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+  shuffle(teamData);
+
+  teamData.forEach((st) => {
     const card = document.createElement("div");
     card.className = "student-card";
     card.innerHTML = `
-      <img src="${st.photo}" alt="${st.fullName}">
+      <img loading="lazy" src="${st.photo}" alt="${st.fullName}">
       <div class="details">
         <p><strong>Name:</strong> ${st.fullName}</p>
         <p><strong>Reg No:</strong> ${st.regNo}</p>
@@ -211,38 +154,14 @@ window.renderTeam = function () {
         <p><strong>Gender:</strong> ${st.gender}</p>
       </div>
     `;
-    container.appendChild(card);
+    fragment.appendChild(card);
   });
-  */
 
-  let i = 0;
-function renderCard() {
-  if (i >= team.length) return;
-
-  const st = team[i];
-  const card = document.createElement("div");
-  card.className = "student-card";
-  card.innerHTML = `
-    <img src="${st.photo}" alt="${st.fullName}">
-    <div class="details">
-      <p><strong>Name:</strong> ${st.fullName}</p>
-      <p><strong>Reg No:</strong> ${st.regNo}</p>
-      <p><strong>Phone:</strong> ${st.phone}</p>
-      <p><strong>Gender:</strong> ${st.gender}</p>
-    </div>
-  `;
-  container.appendChild(card);
-
-  i++;
-  requestAnimationFrame(renderCard);
-}
-requestAnimationFrame(renderCard);
-
-  
+  container.appendChild(fragment);
 };
 
 // ==============================
-// Register student
+// Student registration & update
 // ==============================
 document.getElementById("studentForm").addEventListener("submit", function (e) {
   e.preventDefault();
@@ -251,7 +170,6 @@ document.getElementById("studentForm").addEventListener("submit", function (e) {
   const phone = document.getElementById("phone").value.trim();
   const gender = document.getElementById("gender").value;
   const photo = document.getElementById("photo").files[0];
-
   if (!photo) return alert("Photo is required.");
 
   const reader = new FileReader();
@@ -267,30 +185,19 @@ document.getElementById("studentForm").addEventListener("submit", function (e) {
       address: document.getElementById("address").value.trim(),
       photo: reader.result,
     };
-
-    // ✅ Save this student in localStorage for syncing
     localStorage.setItem("pendingStudent", JSON.stringify(student));
-
     alert("Student saved locally. Sync when online.");
-    document.getElementById("studentForm").reset();
+    this.reset();
     showPage("home");
-  };
+  }.bind(this);
   reader.readAsDataURL(photo);
 });
 
-
-// ==============================
-// Update student
-// ==============================
 window.updateStudent = function () {
   const reg = document.getElementById("reg").value.trim();
   if (!reg) return alert("Reg No is required to update.");
-
   const studentIndex = classmates.findIndex((s) => s.regNo === reg);
-  if (studentIndex === -1) {
-    alert("No record found for that Reg No.");
-    return;
-  }
+  if (studentIndex === -1) return alert("No record found for that Reg No.");
 
   const oldStudent = classmates[studentIndex];
   const updatedStudent = {
@@ -328,7 +235,71 @@ window.updateStudent = function () {
   }
 };
 
+// ==============================
+// Map helpers
+// ==============================
+const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
+const mapsBase = isIOS ? "http://maps.apple.com/" : "https://www.google.com/maps/";
 
+function isOnline() {
+  return navigator.onLine;
+}
+
+function showOfflineMessage() {
+  if (!document.getElementById("offline-message")) {
+    const msg = document.createElement("div");
+    msg.id = "offline-message";
+    msg.textContent = "You are currently offline. Map features may not work.";
+    Object.assign(msg.style, {
+      position: "fixed",
+      bottom: "10px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      backgroundColor: "#f44336",
+      color: "#fff",
+      padding: "8px 16px",
+      borderRadius: "5px",
+      zIndex: 1000,
+    });
+    document.body.appendChild(msg);
+    setTimeout(() => msg.remove(), 5000);
+  }
+}
+
+window.openPlace = function (address) {
+  if (!isOnline()) return showOfflineMessage();
+  const q = encodeURIComponent(address);
+  const url = isIOS ? `${mapsBase}?q=${q}` : `${mapsBase}search/?api=1&query=${q}`;
+  window.open(url, "_blank");
+};
+
+window.openDirections = function (address) {
+  if (!isOnline()) return showOfflineMessage();
+  const destination = encodeURIComponent(address);
+
+  if (!navigator.geolocation) return openDirectionsNoOrigin(destination);
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      const url = isIOS
+        ? `${mapsBase}?saddr=${latitude},${longitude}&daddr=${destination}`
+        : `${mapsBase}dir/?api=1&origin=${latitude},${longitude}&destination=${destination}`;
+      window.open(url, "_blank");
+    },
+    () => openDirectionsNoOrigin(destination),
+    { timeout: 5000 }
+  );
+};
+
+function openDirectionsNoOrigin(destination) {
+  const url = isIOS
+    ? `${mapsBase}?daddr=${destination}`
+    : `${mapsBase}dir/?api=1&destination=${destination}`;
+  window.open(url, "_blank");
+}
+
+window.addEventListener("offline", showOfflineMessage);
 
 
 
@@ -445,6 +416,7 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
 
 
