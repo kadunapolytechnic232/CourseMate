@@ -1,16 +1,6 @@
-/*
+
 import { data } from "./classmates-data.js";
 let classmates = data;
-*/
-
-import { data } from "./classmates-data.js";
-
-// Combine pending student and remove duplicates
-let classmates = (() => {
-  const pending = localStorage.getItem("pendingStudent");
-  const all = pending ? [JSON.parse(pending), ...data] : [...data];
-  return Array.from(new Map(all.map((s) => [s.regNo, s])).values());
-})();
 
 
 
@@ -630,6 +620,7 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
 
 
