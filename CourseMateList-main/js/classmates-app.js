@@ -25,7 +25,7 @@ function saveClassmates() {
 }
 
 document.querySelectorAll(".showPage").forEach((button) => {
-  button.addEventListener("click", () => showPage(button.dataset.id));
+  button.addEventListener("click", () => { showPage(`${button.dataset.id}`)});
 });
 
 // ==============================
@@ -826,6 +826,7 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
 
 
