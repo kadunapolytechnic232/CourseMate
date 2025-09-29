@@ -1,4 +1,9 @@
-import { data } from "./classmates-data.js";
+//import { data } from "./classmates-data.js";
+
+import { data } from "https://kadunapolytechnic232.github.io/CourseMate/CourseMateList-main/js/classmates-data.js";
+
+
+
 
 // Combine pending student and remove duplicates
 let classmates = (() => {
@@ -826,6 +831,7 @@ function openDirectionsNoOrigin(destination) {
 
 // Optional: Listen for connection changes
 window.addEventListener("offline", showOfflineMessage);
+
 
 
 
